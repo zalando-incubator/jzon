@@ -13,11 +13,11 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 
-public final class PayloadKeyModifierImpl implements PayloadKeyModifier {
+public final class DefaultKeyModifier implements PayloadKeyModifier {
 
     private static final Configuration PATH_CONFIGURATION = builder().options(Option.AS_PATH_LIST).build();
 
-    PayloadKeyModifierImpl() {
+    DefaultKeyModifier() {
         // do nothing
     }
 

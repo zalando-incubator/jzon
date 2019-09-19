@@ -52,7 +52,7 @@ import com.google.common.collect.ImmutableMap;
 public class PayloadKeyParserTest {
 
     private static final String KEY_SIZE = "size";
-    private PayloadKeyParserImpl payloadKeyParserImpl;
+    private DefaultPayloadKeyParser defaultPayloadKeyParser;
     private PayloadKeyParser payloadKeyParser;
     private final String expectedCustomerNumber = "12345";
     private final String expectedCustomerHash = "12345anyStupidHash";
@@ -62,14 +62,14 @@ public class PayloadKeyParserTest {
 
     @Before
     public void setup() {
-        payloadKeyParserImpl = new PayloadKeyParserImpl(objectMapper);
+        defaultPayloadKeyParser = new DefaultPayloadKeyParser(objectMapper);
         payloadKeyParser = new PayloadKeyFactory().getPayloadKeyParser(objectMapper);
     }
 
     @Test(expected = JsonParsingException.class)
     public void parse_throwsJsonParsingExceptionn_ifPayloadCannotBeSerialized() throws Exception {
         objectMapper = mock(ObjectMapper.class);
-        payloadKeyParser = new PayloadKeyParserImpl(objectMapper);
+        payloadKeyParser = new DefaultPayloadKeyParser(objectMapper);
 
         final ImmutableMap<String, Object> payload = ImmutableMap.of("customer_number", "2");
 
@@ -87,7 +87,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_CUSTOMER_NUMBER,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_CUSTOMER_NUMBER,
                     KEY_CUSTOMER_HASH), jsonPayload, AS_VALUE_LIST);
 
         assertEquals(expectedCustomerNumber, resultMap.get(KEY_CUSTOMER_NUMBER)[0]);
@@ -154,7 +154,7 @@ public class PayloadKeyParserTest {
                                   +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_CUSTOMER_NUMBER,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_CUSTOMER_NUMBER,
                     KEY_CUSTOMER_HASH), jsonPayload, AS_VALUE_LIST);
 
         assertEquals(expectedCustomerNumber, resultMap.get(KEY_CUSTOMER_NUMBER)[0]);
@@ -172,7 +172,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_CUSTOMER_NUMBER,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_CUSTOMER_NUMBER,
                     KEY_CUSTOMER_HASH), jsonPayload, AS_VALUE_LIST);
 
         assertNull(resultMap.get(KEY_CUSTOMER_NUMBER));
@@ -183,8 +183,8 @@ public class PayloadKeyParserTest {
     public void parse_returnsEmptyMap_forEmptyPayload() {
         final String jsonPayload = " ";
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_CUSTOMER_NUMBER), jsonPayload,
-                AS_VALUE_LIST);
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_CUSTOMER_NUMBER),
+                jsonPayload, AS_VALUE_LIST);
 
         assertEquals(emptyMap(), resultMap);
     }
@@ -203,7 +203,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_SIMPLE_SKU), jsonPayload,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_SIMPLE_SKU), jsonPayload,
                 AS_VALUE_LIST);
 
         final Set<String> actualSimpleSkus = new HashSet<>();
@@ -228,7 +228,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_SIMPLE_SKU), jsonPayload,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_SIMPLE_SKU), jsonPayload,
                 AS_VALUE_LIST);
 
         final Set<String> actualSimpleSkus = new HashSet<>();
@@ -262,7 +262,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_SIMPLE_SKU), jsonPayload,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_SIMPLE_SKU), jsonPayload,
                 AS_VALUE_LIST);
 
         final Set<String> actualSimpleSkus = new HashSet<>();
@@ -294,7 +294,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_SIMPLE_SKU), jsonPayload,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_SIMPLE_SKU), jsonPayload,
                 AS_PATH_LIST);
 
         final Set<String> actualSimpleSkus = new HashSet<>();
@@ -330,7 +330,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet("orders_number"), jsonPayload,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet("orders_number"), jsonPayload,
                 AS_VALUE_LIST);
 
         final Set<String> actualOrderNumbers = new HashSet<>();
@@ -359,7 +359,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet("orders_number"), jsonPayload,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet("orders_number"), jsonPayload,
                 AS_PATH_LIST);
 
         final Set<String> actualOrderNumbers = new HashSet<>();
@@ -386,7 +386,7 @@ public class PayloadKeyParserTest {
         //J+
 
         final String malformedKey = "customer_";
-        final Map<String, Object[]> returnedMap = payloadKeyParserImpl.parse(newHashSet(malformedKey), jsonPayload,
+        final Map<String, Object[]> returnedMap = defaultPayloadKeyParser.parse(newHashSet(malformedKey), jsonPayload,
                 AS_VALUE_LIST);
         assertThat(capture.toString()).contains("The provided key [customer_] is malformed");
         assertEquals(emptyMap(), returnedMap);
@@ -404,7 +404,7 @@ public class PayloadKeyParserTest {
         //J+
 
         final String keyWithMoreThanTwoWordsSnakeCased = "three_words_key";
-        final Map<String, Object[]> returnedMap = payloadKeyParserImpl.parse(newHashSet(
+        final Map<String, Object[]> returnedMap = defaultPayloadKeyParser.parse(newHashSet(
                     keyWithMoreThanTwoWordsSnakeCased), jsonPayload, AS_VALUE_LIST);
 
         assertThat(capture.toString()).doesNotContain("ERROR");
@@ -423,7 +423,7 @@ public class PayloadKeyParserTest {
         //J+
 
         final String malformedKey = " ";
-        payloadKeyParserImpl.parse(newHashSet(malformedKey), jsonPayload, AS_VALUE_LIST);
+        defaultPayloadKeyParser.parse(newHashSet(malformedKey), jsonPayload, AS_VALUE_LIST);
     }
 
     @Test
@@ -438,7 +438,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_CUSTOMER_NUMBER,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_CUSTOMER_NUMBER,
                     KEY_CUSTOMER_HASH), jsonPayload, AS_VALUE_LIST);
 
         assertEquals(expectedCustomerNumber, resultMap.get(KEY_CUSTOMER_NUMBER)[0]);
@@ -454,7 +454,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_CUSTOMER_NUMBER,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_CUSTOMER_NUMBER,
                     KEY_CUSTOMER_HASH), jsonPayload, AS_PATH_LIST);
 
         assertEquals("$['" + KEY_CUSTOMER_NUMBER + "']", resultMap.get(KEY_CUSTOMER_NUMBER)[0]);
@@ -473,7 +473,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_CUSTOMER_NUMBER,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_CUSTOMER_NUMBER,
                     KEY_CUSTOMER_HASH), jsonPayload, AS_PATH_LIST);
 
         assertEquals("$['customer']['number']", resultMap.get(KEY_CUSTOMER_NUMBER)[0]);
@@ -493,7 +493,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_SIMPLE_SKU), jsonPayload,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_SIMPLE_SKU), jsonPayload,
                 AS_PATH_LIST);
 
         final Set<String> actualSimpleSkus = new HashSet<>();
@@ -515,7 +515,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final List<Map<String, Object>> resultMap = payloadKeyParserImpl.parseGrouped(KEY_CUSTOMER_NUMBER,
+        final List<Map<String, Object>> resultMap = defaultPayloadKeyParser.parseGrouped(KEY_CUSTOMER_NUMBER,
                 newHashSet(KEY_CUSTOMER_EMAIL, KEY_CUSTOMER_HASH), newHashSet(), jsonPayload);
 
         assertThat(resultMap).isEmpty();
@@ -534,7 +534,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final List<Map<String, Object>> resultMap = payloadKeyParserImpl.parseGrouped(KEY_CUSTOMER_NUMBER,
+        final List<Map<String, Object>> resultMap = defaultPayloadKeyParser.parseGrouped(KEY_CUSTOMER_NUMBER,
                 newHashSet(KEY_CUSTOMER_EMAIL, KEY_CUSTOMER_HASH), newHashSet(), jsonPayload);
 
         assertThat(resultMap.size()).isEqualTo(1);
@@ -572,7 +572,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final List<Map<String, Object>> resultMap = payloadKeyParserImpl.parseGrouped(KEY_CUSTOMER_NUMBER,
+        final List<Map<String, Object>> resultMap = defaultPayloadKeyParser.parseGrouped(KEY_CUSTOMER_NUMBER,
                 newHashSet(KEY_CUSTOMER_ADDRESS, KEY_CUSTOMER_HASH), emptySet(), jsonPayload);
 
         assertThat(resultMap.size()).isEqualTo(2);
@@ -602,7 +602,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final List<Map<String, Object>> resultMap = payloadKeyParserImpl.parseGrouped(KEY_CUSTOMER_NUMBER,
+        final List<Map<String, Object>> resultMap = defaultPayloadKeyParser.parseGrouped(KEY_CUSTOMER_NUMBER,
                 newHashSet(KEY_CUSTOMER_EMAIL, KEY_LAST_NAME), newHashSet(KEY_CUSTOMER_ADDRESS), jsonPayload);
 
         assertThat(resultMap).isEmpty();
@@ -622,7 +622,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final List<Map<String, Object>> resultMap = payloadKeyParserImpl.parseGrouped(KEY_CUSTOMER_NUMBER,
+        final List<Map<String, Object>> resultMap = defaultPayloadKeyParser.parseGrouped(KEY_CUSTOMER_NUMBER,
                 newHashSet(KEY_CUSTOMER_EMAIL), newHashSet(KEY_CUSTOMER_ADDRESS, KEY_LAST_NAME), jsonPayload);
 
         assertThat(resultMap.size()).isEqualTo(1);
@@ -750,7 +750,7 @@ public class PayloadKeyParserTest {
                 +"}";
         //J+
 
-        final Map<String, Object[]> resultMap = payloadKeyParserImpl.parse(newHashSet(KEY_CUSTOMER_NUMBER,
+        final Map<String, Object[]> resultMap = defaultPayloadKeyParser.parse(newHashSet(KEY_CUSTOMER_NUMBER,
                     KEY_CUSTOMER_EMAIL), jsonPayload, AS_PATH_LIST);
 
         assertEquals("$['customer']['number']", resultMap.get(KEY_CUSTOMER_NUMBER)[0]);

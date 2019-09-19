@@ -51,9 +51,9 @@ import net.minidev.json.JSONArray;
 /**
  * @author  Sina Golesorkhi(sina.golesorkhi@zalando.de)
  */
-public final class PayloadKeyParserImpl implements PayloadKeyParser {
+public final class DefaultPayloadKeyParser implements PayloadKeyParser {
 
-    private static final Logger LOGGER = getLogger(PayloadKeyParserImpl.class);
+    private static final Logger LOGGER = getLogger(DefaultPayloadKeyParser.class);
     private static final String ALL_FROM_ROOT_OP = "$.*";
     private static final String ROOT_ELEMENT = "$";
     private static final String EMPTY_STRING = "";
@@ -67,7 +67,7 @@ public final class PayloadKeyParserImpl implements PayloadKeyParser {
     private final ObjectMapper objectMapper;
     private static final Pattern ROOT_ELEMENT_PATTERN = Pattern.compile(ROOT_ELEMENT, Pattern.LITERAL);
 
-    PayloadKeyParserImpl(final ObjectMapper objectMapper) {
+    DefaultPayloadKeyParser(final ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 

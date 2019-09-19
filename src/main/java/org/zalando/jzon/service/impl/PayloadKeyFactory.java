@@ -8,10 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public final class PayloadKeyFactory {
 
     public PayloadKeyParser getPayloadKeyParser(final ObjectMapper objectMapper) {
-        return new PayloadKeyParserImpl(objectMapper);
+        return new DefaultPayloadKeyParser(objectMapper);
     }
 
     public PayloadKeyModifier getPayloadKeyModifier() {
-        return new PayloadKeyModifierImpl();
+        return new DefaultKeyModifier();
     }
 }
