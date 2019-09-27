@@ -5,7 +5,7 @@
 
     <groupId>org.zalando</groupId>
     <artifactId>jzon</artifactId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.5.0</version>
     <name>Jzon</name>
     <description>A set of APIs enabling the parsing of values from json payloads with different naming conventions and structures</description>
 
