@@ -1,0 +1,6 @@
+{
+  "url": "${git.remote.origin.url}",
+  "revision": "${git.commit.id}",
+  "author": "${git.build.user.name} (${git.build.user.email})",
+  "status": "${git.commit.id.describe}"
+}

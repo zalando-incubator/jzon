@@ -12,7 +12,7 @@ In oder to use it the following dependency should be added to the project:
 <dependency>
     <groupId>org.zalando</groupId>
     <artifactId>jzon</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
 </dependency
 ```
 ## Usage
@@ -168,4 +168,5 @@ The unit tests of the library provide an extensive amount examples and scenarios
 
   
 - **[Valentina Georgieva](https://github.com/vkoteva)**
+
 
